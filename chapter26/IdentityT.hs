@@ -1,4 +1,5 @@
-import qualified Prelude (fmap)
+-- import Control.Monad
+import Prelude ((.), ($))
 
 {-
  - Typeclasses definitions
@@ -24,15 +25,13 @@ data IdentityT m a = IdentityT { runIdentityT :: m a }
  -}
 
 instance (MyFunctor m) => MyFunctor (IdentityT m) where
-  fmap f (IdentityT ma) = IdentityT (fmap f ma)
+  fmap f (IdentityT ma) = IdentityT $ fmap f ma
 
 instance (MyApplicative m) => MyApplicative (IdentityT m) where
   pure a = IdentityT (pure a)
   (IdentityT f) <*> (IdentityT a) = IdentityT (f <*> a)
 
-{-
 instance (MyMonad m) => MyMonad (IdentityT m) where
   return a = IdentityT (return a)
   (IdentityT ma) >>= f =
-    IdentityT (ma >>= runIdentityT . f)
--}
+    IdentityT $ ma >>= (runIdentityT . f)
