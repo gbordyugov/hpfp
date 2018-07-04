@@ -6,6 +6,11 @@ instance (Functor m) => Functor (WriterT w m) where
     WriterT $ fmap (\(a, w) -> (f a, w)) maw
 
 
+{-
+(Writer (f, fw)) <*> (Writer (a, aw)) =
+  Writer $ (f a, fw `mappend` aw)
+-}
+
 instance (Applicative m, Monoid w) =>
                           Applicative (WriterT w m) where
   pure x = WriterT $ pure (x, mempty)
