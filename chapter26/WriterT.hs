@@ -9,4 +9,6 @@ instance (Functor m) => Functor (WriterT w m) where
 instance (Applicative m, Monoid w) =>
                           Applicative (WriterT w m) where
   pure x = WriterT $ pure (x, mempty)
-  (WriterT f) <*> (WriterT a) = undefined -- TODO
+  (WriterT f) <*> (WriterT a) = WriterT $
+    (fmap h f) <*> a where
+      h = undefined
