@@ -8,4 +8,4 @@ instance (Functor m) => Functor (StateT s m) where
 
 instance (Applicative m) => Applicative (StateT s m) where
   pure a = StateT $ \s -> pure $ (a, s)
-  (StateT f) <*> (StateT a) = StateT undefined
+  (StateT f) <*> (StateT a) = StateT $ \s -> undefined
