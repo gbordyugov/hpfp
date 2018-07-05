@@ -13,3 +13,12 @@ instance Applicative (State s) where
       (b, q) = a t
     in
       (h b, q)
+
+
+instance Monad (State s) where
+  return = pure
+  (State a) >>= f = State $ \s ->
+    let
+      (b, t) = a s
+    in
+      (runState $ f b) t
