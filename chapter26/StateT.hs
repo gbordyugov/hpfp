@@ -17,9 +17,12 @@ tmp1 f a = \s ->
 tmp2 :: (a -> b, s) -> (a, s) -> (b, s)
 tmp2 (fab, s) (a, t) = (fab a, t)
 
--- what :: Applicative m => StateT s m (a -> b) -> StateT s m a -> StateT s m b
+{-
+what :: Applicative m =>
+  StateT s m (a -> b) -> StateT s m a -> StateT s m b
 what (StateT f) (StateT a) = StateT $ \s ->
   let
+    mfs :: Applicative m => m (a -> b, s)
     mfs = f s
     tmp = f' <$> mfs
     f' :: (a -> b, s) -> (s -> (a, s)) -> (b, s)
@@ -30,6 +33,19 @@ what (StateT f) (StateT a) = StateT $ \s ->
         (f'' a', t)
   in
     tmp <*> a
+-}
+
+{-
+what :: Applicative m => (s -> m (a -> b, s)) -> (s -> m (a, s)) -> (s -> m (b, s))
+-}
+what f a = \s ->
+  let
+    mfs = f s
+    tmp = g <$> mfs
+    g (f', s')
+  in
+    undefined
+
 
 instance (Applicative m) => Applicative (StateT s m) where
   pure a = StateT $ \s -> pure $ (a, s)
