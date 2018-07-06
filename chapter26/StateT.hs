@@ -21,13 +21,13 @@ tmp2 (fab, s) (a, t) = (fab a, t)
 what (StateT f) (StateT a) = StateT $ \s ->
   let
     mfs = f s
-    tmp = h <$> mfs
-    h :: (a -> b, s) -> (s -> (a, s)) -> (b, s)
-    h (f, s) a =
+    tmp = f' <$> mfs
+    f' :: (a -> b, s) -> (s -> (a, s)) -> (b, s)
+    f' (f'', s) a =
       let
         (a', t) = a s
       in
-        (f a', t)
+        (f'' a', t)
   in
     tmp <*> a
 
