@@ -20,7 +20,13 @@ instance (Applicative m) => Applicative (StateT s m) where
   pure a = StateT $ \s -> pure $ (a, s)
   (StateT f) <*> (StateT a) = StateT $ \s ->
     let
-      fs = f s
-      -- g  = fmap (\(f, s) -> f
+      mfs = f s
+      tmp = fmap h mfs
+      h :: (a -> b, s) -> (s -> (a, s)) -> (s -> (b, s))
+      h (f, s) a =
+        let
+          (a', t) = a s
+        in
+          \s -> (f a', t)
     in
-      undefined
+      tmp <*> a
