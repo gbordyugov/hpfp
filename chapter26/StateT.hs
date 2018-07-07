@@ -13,5 +13,8 @@ instance (Monad m) => Monad (StateT s m) where
     (runStateT (f b)) t
 
 instance (Monad m) => Applicative (StateT s m) where
-  pure a = StateT $ \s -> pure $ (a, s)
-  (StateT f) <*> (StateT a) = undefined
+  pure = return
+  (StateT f) <*> (StateT a) = StateT $ \s -> do
+    (b, t) <- a s
+    (g, q) <- f t
+    return (g b, q)
